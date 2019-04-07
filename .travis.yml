@@ -1,0 +1,13 @@
+language: julia
+os:
+    - linux
+julia:
+    - nightly
+notifications:
+  email: false
+before_install:
+  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+script:
+  - git clone --depth 1 --single-branch https://github.com/JuliaLang/julia
+  - julia -e 'Pkg.init(); Pkg.clone(pwd()); ARGS = [joinpath(Pkg.dir("JuliaParser"), "julia")]; Pkg.test("JuliaParser")'
+  - julia -e 'include(Pkg.dir("JuliaParser","bin","repl.jl")); Pkg.test("JuliaParser")'
